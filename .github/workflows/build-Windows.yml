@@ -55,8 +55,8 @@ env:
 
   unityVersion: "2021.3.36f1"
   unityVersionHash: "7a0645017be0"
-  blenderMajorVersion: "3.5"
-  blenderVersion: "3.5.1"
+  blenderMajorVersion: "4.3"
+  blenderVersion: "4.3.0"
 
   versionName: ${{ inputs.versionName }}
 
@@ -71,8 +71,7 @@ env:
 jobs:
   windowsBuilder:
     name: 🔨 Build - Windows
-    # I only have a Windows Server 2025 self hosted runner, so no more qualification is required here
-    runs-on: self-hosted
+    runs-on: windows-2025
     timeout-minutes: 90
 
     steps:
@@ -84,8 +83,8 @@ jobs:
         continue-on-error: true
         run: >
           mkdir ${{ runner.temp }}\UnityInstall;
-          curl.exe -L -o "${{ runner.temp }}\UnityInstall\UnitySetup64-${{ env.unityVersion }}.exe" https://download.unity3d.com/download_unity/${{ env.unityVersionHash }}/Windows64EditorInstaller/UnitySetup64-${{ env.unityVersion }}.exe;
-          curl.exe -L -o "${{ runner.temp }}\UnityInstall\UnitySetup-Windows-IL2CPP-Support-for-Editor-${{ env.unityVersion }}.exe" https://download.unity3d.com/download_unity/${{ env.unityVersionHash }}/TargetSupportInstaller/UnitySetup-Windows-IL2CPP-Support-for-Editor-${{ env.unityVersion }}.exe;
+          curl -L -o "${{ runner.temp }}\UnityInstall\UnitySetup64-${{ env.unityVersion }}.exe" https://download.unity3d.com/download_unity/${{ env.unityVersionHash }}/Windows64EditorInstaller/UnitySetup64-${{ env.unityVersion }}.exe;
+          curl -L -o "${{ runner.temp }}\UnityInstall\UnitySetup-Windows-IL2CPP-Support-for-Editor-${{ env.unityVersion }}.exe" https://download.unity3d.com/download_unity/${{ env.unityVersionHash }}/TargetSupportInstaller/UnitySetup-Windows-IL2CPP-Support-for-Editor-${{ env.unityVersion }}.exe;
 
       - name: "[Install] Install Unity"
         run: >
@@ -165,7 +164,7 @@ jobs:
       - if: ${{ steps.blender.outputs.cache-hit != 'true' }}
         name: "[Pre-install] Download Blender (${{ env.blenderVersion }})"
         continue-on-error: true
-        run: mkdir ${{ runner.temp }}\BlenderInstall && curl.exe -L -o "${{ runner.temp }}\BlenderInstall\blender.msi" https://download.blender.org/release/Blender${{ env.blenderMajorVersion }}/blender-${{ env.blenderVersion }}-windows-x64.msi
+        run: mkdir ${{ runner.temp }}\BlenderInstall && curl -L -o "${{ runner.temp }}\BlenderInstall\blender.msi" https://download.blender.org/release/Blender${{ env.blenderMajorVersion }}/blender-${{ env.blenderVersion }}-windows-x64.msi
 
       - name: "[Pre-install] Install Blender (${{ env.blenderVersion }})"
         run: >
